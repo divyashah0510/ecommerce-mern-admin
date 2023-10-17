@@ -120,11 +120,11 @@ function Order(props) {
                     <Col className="order-detail-col">
                       <p>
                         <RiQuestionLine className="order-icon" />{" "}
-                        {order.status == "placed"
+                        {order.status === "placed"
                           ? "Placed"
-                          : order.status == "shipped"
+                          : order.status === "shipped"
                           ? "Shipped"
-                          : order.status == "delivered"
+                          : order.status === "delivered"
                           ? "Delivered"
                           : "Cancelled"}
                       </p>

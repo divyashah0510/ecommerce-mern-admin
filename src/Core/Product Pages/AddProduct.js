@@ -8,10 +8,11 @@ import "./AddProduct.css";
 function AddProduct() {
   const [newProduct, setNewProduct] = useState({
     name: "",
-    price: "",
-    stock: "",
-    category: "",
-    desc: "",
+    material: "",
+    quantity: "",
+    prodType: "",
+    size: "",
+    batch:""
   });
 
   const [categories, setCategories] = useState([]);
@@ -21,13 +22,13 @@ function AddProduct() {
   }, []);
 
   const getCategories = () => {
-    setCategories([]);
-    axios({
-      method: "get",
-      url: "https://ecommerceappcj.herokuapp.com/api/categories/",
-    }).then(function (response) {
-      setCategories(response.data.categories);
-    });
+    // setCategories([]);
+    // axios({
+    //   method: "get",
+    //   url: "https://ecommerceappcj.herokuapp.com/api/categories/",
+    // }).then(function (response) {
+    //   setCategories(response.data.categories);
+    // });
   };
 
   const handleChange = (event) => {
@@ -38,8 +39,11 @@ function AddProduct() {
   };
 
   const [imagePreview, setImagePreview] = useState("");
+  const [dimensionImagePreview, setDimensionImagePreview] = useState("");
   const [image, setImage] = useState(null);
+  const [dimensionImage, setDimensionImage] = useState(null);
   const imageButtonRef = useRef();
+  const dimensionImageButtonRef = useRef();
   const types = ["image/png", "image/jpeg", "image/jpg"];
 
   function handleImageChange(event) {
@@ -52,28 +56,41 @@ function AddProduct() {
     }
   }
 
+  function handleDimensionImageChange(event) {
+    let selectedFile = event.target.files[0];
+    if (selectedFile && types.includes(selectedFile.type)) {
+      setDimensionImage(selectedFile);
+      setDimensionImagePreview(URL.createObjectURL(selectedFile));
+    } else {
+      setDimensionImage(null);
+    }
+  }
+
   const addProduct = async (event) => {
     event.preventDefault();
     try {
       const formData = new FormData();
       formData.append("name", newProduct.name);
-      formData.append("categoryName", newProduct.category);
-      formData.append("image", image);
-      formData.append("price", newProduct.price);
-      formData.append("stockQuantity", newProduct.stock);
-      formData.append("description", newProduct.desc);
+      formData.append("ProdType", newProduct.prodType);
+      formData.append("image", dimensionImage);
+      formData.append("material", newProduct.material);
+      formData.append("quantity", newProduct.quantity);
+      formData.append("size", newProduct.size);
+      formData.append("batch", newProduct.batch);
       axios({
         method: "post",
-        url: "https://ecommerceappcj.herokuapp.com/api/products/create/product/",
+        // url: "https://ecommerceappcj.herokuapp.com/api/products/create/product/",
         data: formData,
       }).then((response) => {
-        setImagePreview();
+        setImagePreview("");
+        setDimensionImagePreview("");
         setNewProduct({
           name: "",
-          price: "",
-          stock: "",
-          category: "",
-          desc: "",
+          material: "",
+          quantity: "",
+          prodType: "",
+          size: "",
+          batch:""
         });
       });
     } catch (err) {
@@ -108,11 +125,11 @@ function AddProduct() {
               </Col>
               <Col>
                 <div className="add-product-input-div">
-                  <p>Product Price</p>
+                  <p>Product Material</p>
                   <input
                     type="text"
-                    name="price"
-                    value={newProduct.price}
+                    name="material"
+                    value={newProduct.material}
                     onChange={handleChange}
                   ></input>
                 </div>
@@ -121,24 +138,36 @@ function AddProduct() {
             <Row>
               <Col>
                 <div className="add-product-input-div">
-                  <p>Product Category</p>
+                  <p>Product Type</p>
                   <select
                     className="add-product-dropdown"
-                    name="category"
-                    id="category"
-                    value={newProduct.category}
+                    name="prodType"
+                    id="prodType"
+                    value={newProduct.prodType}
                     onChange={handleChange}
                   >
-                    <option className="add-product-dropdown-option">
+                    <option disabled className="add-product-dropdown-option">
                       Please select a product category
                     </option>
-                    {categories.map((category) => {
+                    <option className="add-product-dropdown-option">
+                      Hex Bolt
+                    </option>
+                    <option className="add-product-dropdown-option">
+                      U Bolt
+                    </option>
+                    <option className="add-product-dropdown-option">
+                      S Bolt
+                    </option>
+                    <option className="add-product-dropdown-option">
+                      Washers
+                    </option>
+                    {categories.map((prodType) => {
                       return (
                         <option
                           className="add-product-dropdown-option"
-                          value={category.name}
+                          value={prodType.name}
                         >
-                          {category.name}
+                          {prodType.name}
                         </option>
                       );
                     })}{" "}
@@ -147,12 +176,12 @@ function AddProduct() {
               </Col>
               <Col>
                 <div className="add-product-input-div">
-                  <p>Stock Quantity</p>
+                  <p>Product Quantity</p>
                   <input
                     type="number"
-                    name="stock"
+                    name="quantity"
                     min={0}
-                    value={newProduct.stock}
+                    value={newProduct.quantity}
                     onChange={handleChange}
                   ></input>
                 </div>
@@ -161,13 +190,50 @@ function AddProduct() {
             <Row>
               <Col>
                 <div className="add-product-input-div">
-                  <p>Product Description</p>
-                  <textarea
-                    rows={8}
-                    name="desc"
-                    value={newProduct.desc}
+                  <p>Product Size</p>
+                  <input
+                    type="text"
+                    name="size"
+                    value={newProduct.size}
                     onChange={handleChange}
-                  ></textarea>
+                  ></input>
+                </div>
+              </Col>
+              <Col>
+                <div className="add-product-input-div">
+                  <p>Product Batch</p>
+                  <input
+                    type="text"
+                    name="batch"
+                    value={newProduct.batch}
+                    onChange={handleChange}
+                  ></input>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <div className="add-product-image-div">
+                  <div
+                    onClick={() => {
+                      dimensionImageButtonRef.current.click();
+                    }}
+                    className="product-image-div"
+                  >
+                    <Form.Control
+                      ref={dimensionImageButtonRef}
+                      style={{ display: "none" }}
+                      type="file"
+                      name="dimensionImage"
+                      accept="image/*"
+                      onChange={handleDimensionImageChange}
+                    />
+                    {dimensionImagePreview ? (
+                      <img src={dimensionImagePreview} alt="preview" />
+                    ) : (
+                      <p>Add Dimension image</p>
+                    )}
+                  </div>
                 </div>
               </Col>
               <Col>

@@ -42,7 +42,7 @@ function User(props) {
               <Row>
                 <Col className="user-details-col">
                   <img
-                    src={`https://ecommerceappcj.herokuapp.com/${user.image}`}
+                    // src={`https://ecommerceappcj.herokuapp.com/${user.image}`}
                     alt={user.name}
                   />
                   <h4>{user.name}</h4>

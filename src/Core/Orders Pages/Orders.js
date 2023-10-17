@@ -89,11 +89,11 @@ function Orders() {
                     userName: order.userId.name,
                     userPhone: order.userId.phone,
                     status:
-                      order.status == "placed"
+                      order.status === "placed"
                         ? "Placed"
-                        : order.status == "shipped"
+                        : order.status === "shipped"
                         ? "Shipped"
-                        : order.status == "delivered"
+                        : order.status === "delivered"
                         ? "Delivered"
                         : "Cancelled",
                     orderAmount: `Rs. ${order.orderAmount
